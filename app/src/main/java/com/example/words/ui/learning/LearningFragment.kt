@@ -1,13 +1,13 @@
 package com.example.words.ui.learning
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import com.example.words.R
 import com.example.words.databinding.FragmentLearningBinding
 import com.example.words.viewmodel.WordViewModel
@@ -60,7 +60,8 @@ class LearningFragment : Fragment() {
                 // 认识且记忆正确 -> 标记为认识
                 markWordAsKnown()
             } else {
-                // 不认识但记忆正确 -> 标记为不认识
+                // 第一阶段选择了"不认识"，无论记忆是否正确，都进入复习
+                // 因为第一阶段就选择了"不认识"，说明单词不熟悉
                 markWordAsUnknown()
             }
             resetToFirstStage()
@@ -70,11 +71,12 @@ class LearningFragment : Fragment() {
         binding.btnWrong.setOnClickListener {
             // 用户记忆错误
             if (firstStageChoice == true) {
-                // 认识但记忆错误 -> 实际是不认识
+                // 认识但记忆错误 -> 实际是不认识，进入复习
                 markWordAsUnknown()
             } else {
-                // 不认识且记忆错误 -> 实际是认识
-                markWordAsKnown()
+                // 第一阶段选择了"不认识"，无论记忆是否正确，都进入复习
+                // 因为第一阶段就选择了"不认识"，说明单词不熟悉
+                markWordAsUnknown()
             }
             resetToFirstStage()
             loadNextWord()
@@ -133,7 +135,12 @@ class LearningFragment : Fragment() {
 
     private fun markWordAsUnknown() {
         viewLifecycleOwner.lifecycleScope.launch {
+            val currentWord = viewModel.currentWord.value
+            Log.d("LearningFragment", "标记单词为不认识: ${currentWord?.english}")
             viewModel.markAsUnknown()
+            // 检查单词是否已标记为REVIEWING
+            val updatedWord = viewModel.currentWord.value
+            Log.d("LearningFragment", "标记后单词状态: ${updatedWord?.status}, reviewStage: ${updatedWord?.reviewStage}")
         }
     }
 

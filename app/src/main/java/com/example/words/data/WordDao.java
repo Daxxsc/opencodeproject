@@ -10,6 +10,9 @@ public interface WordDao {
     @Insert
     long insert(Word word);
     
+    @Insert
+    void insertAll(Word... words);
+    
     @Update
     void update(Word word);
     
@@ -25,8 +28,8 @@ public interface WordDao {
     @Query("SELECT * FROM words WHERE isHidden = :hidden ORDER BY id")
     List<Word> getWordsByHiddenStatus(boolean hidden);
     
-    @Query("SELECT * FROM words WHERE status = 'REVIEWING' AND nextReviewDate <= :currentDate ORDER BY nextReviewDate")
-    List<Word> getWordsDueForReview(Date currentDate);
+    @Query("SELECT * FROM words WHERE status = 'REVIEWING' ORDER BY nextReviewDate")
+    List<Word> getWordsDueForReview();
     
     @Query("SELECT * FROM words WHERE status = 'UNKNOWN' ORDER BY RANDOM() LIMIT 1")
     Word getRandomUnknownWord();
@@ -43,12 +46,18 @@ public interface WordDao {
     @Query("SELECT COUNT(*) FROM words WHERE isHidden = 1")
     int getHiddenCount();
     
-    @Query("SELECT COUNT(*) FROM words WHERE status = 'REVIEWING' AND nextReviewDate <= :currentDate")
-    int getDueReviewCount(Date currentDate);
+    @Query("SELECT COUNT(*) FROM words WHERE status = 'REVIEWING'")
+    int getDueReviewCount();
     
     @Query("SELECT COUNT(*) FROM words")
     int getWordCount();
     
-    @Query("SELECT * FROM words WHERE status = 'REVIEWING' AND nextReviewDate <= :currentDate ORDER BY nextReviewDate LIMIT 1")
-    Word getNextReviewWord(Date currentDate);
+    @Query("SELECT * FROM words WHERE status = 'REVIEWING' ORDER BY nextReviewDate")
+    List<Word> getAllReviewWords();
+    
+    @Query("SELECT * FROM words WHERE status = 'REVIEWING' ORDER BY nextReviewDate LIMIT 1")
+    Word getNextReviewWord();
+    
+    @Query("SELECT * FROM words WHERE id = :id")
+    Word getWordById(long id);
 }

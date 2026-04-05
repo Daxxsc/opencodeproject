@@ -3,6 +3,7 @@ package com.example.words
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.words.data.WordDatabase
 import com.example.words.databinding.ActivityMainBinding
 import com.example.words.ui.learning.LearningFragment
 import com.example.words.ui.overview.OverviewFragment
@@ -17,6 +18,9 @@ class MainActivity : AppCompatActivity() {
         try {
             binding = ActivityMainBinding.inflate(layoutInflater)
             setContentView(binding.root)
+            
+            // 初始化数据库（这会触发单词库导入）
+            WordDatabase.getDatabase(applicationContext)
             
             setupBottomNavigation()
             

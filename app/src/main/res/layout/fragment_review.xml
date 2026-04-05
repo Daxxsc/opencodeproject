@@ -97,6 +97,44 @@
 
     </LinearLayout>
 
+    <!-- 第二阶段按钮组 -->
+    <LinearLayout
+        android:id="@+id/secondStageBtnGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/tvTranslation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/progressLayout">
+
+        <Button
+            android:id="@+id/btnCorrect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="记对了"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:backgroundTint="@android:color/holo_green_dark" />
+
+        <Button
+            android:id="@+id/btnWrong"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="记错了"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:backgroundTint="@android:color/holo_orange_dark" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/progressLayout"
         android:layout_width="match_parent"
