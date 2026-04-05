@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomStatusTextView: TextView
     private lateinit var recordingIndicator: View
     private lateinit var volumeProgressBar: ProgressBar
-    private lateinit var bluetoothButton: Button
 
     private var speechRecognizer: SpeechRecognizer? = null
     private var isUsingIntentMode = false
@@ -174,7 +173,6 @@ class MainActivity : AppCompatActivity() {
         bottomStatusTextView = binding.bottomStatusTextView
         recordingIndicator = binding.recordingIndicator
         volumeProgressBar = binding.volumeProgressBar
-        bluetoothButton = binding.bluetoothButton
     }
 
     private fun setupObservers() {
@@ -245,11 +243,6 @@ class MainActivity : AppCompatActivity() {
                     requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
                 }
             }
-        }
-
-        bluetoothButton.setOnClickListener {
-            val intent = Intent(this, BluetoothActivity::class.java)
-            startActivity(intent)
         }
     }
 
