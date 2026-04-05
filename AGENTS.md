@@ -2,8 +2,9 @@
 
 ## Project Overview
 - Android app with Kotlin, single module (`:app`)
-- Uses Gradle with Kotlin DSL (`*.gradle.kts`)
-- Version catalog in `gradle/libs.versions.toml`
+- Uses Gradle with Groovy DSL (`build.gradle`)
+- Direct dependency versions (no version catalog)
+- Gradle 8.4 with Android Gradle Plugin 8.3.0
 
 ## Build & Development Commands
 - Build: `./gradlew build`
@@ -12,27 +13,33 @@
 - Assemble APK: `./gradlew assembleDebug` or `./gradlew assembleRelease`
 
 ## Key Configuration
-- Compile SDK: 36 (Android 14)
+- Compile SDK: 34 (Android 14)
 - Min SDK: 24 (Android 7.0)
-- Target SDK: 36
+- Target SDK: 34
 - Java compatibility: Java 11
 - Kotlin code style: official (set in `gradle.properties`)
+- Build tools: 34.0.0
 
-## Project Structure
-- Main entry: `app/src/main/java/com/example/words/MainActivity.kt`
-- Resources: `app/src/main/res/`
-- Tests: `app/src/test/` (unit) and `app/src/androidTest/` (instrumented)
+## Architecture
+- MVVM with Repository pattern
+- Room database for persistence
+- Navigation component with fragments
+- Single activity with three fragments: Learning, Review, Overview
 
 ## Dependencies
-Managed via version catalog (`gradle/libs.versions.toml`):
-- AndroidX Core KTX, AppCompat, Activity, ConstraintLayout
-- Material Design
-- JUnit 4 for unit tests
+Direct versions in `app/build.gradle`:
+- AndroidX Core KTX 1.12.0, AppCompat 1.6.1, ConstraintLayout 2.1.4
+- Material Design 1.10.0
+- Room 2.6.1 with kapt compiler
+- Navigation 2.6.0
+- Lifecycle components 2.7.0
+- Coroutines Android 1.7.3
+- JUnit 4.13.2 for unit tests
 - AndroidX Test for instrumented tests
 
 ## Important Notes
-- Uses Android Gradle Plugin 9.1.0
 - No ProGuard/R8 minification enabled in release builds
-- Single activity architecture with edge-to-edge design
-- Generated files in `.gradle/`, `build/`, and `.idea/` are gitignored
-- Local properties (`local.properties`) contains SDK paths, gitignored
+- View binding enabled (`viewBinding true`)
+- SDK path in `local.properties` (gitignored)
+- Generated files in `.gradle/`, `build/`, `.idea/` are gitignored
+- Chinese README describes 考研单词学习应用 (postgraduate exam vocabulary learning app)
