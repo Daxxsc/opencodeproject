@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">考研单词</string>
+    <string name="title_learn">学习</string>
+    <string name="title_review">复习</string>
+    <string name="title_overview">概览</string>
+    <string name="title_hidden">隐藏</string>
+    
+    <string name="word_english">英文</string>
+    <string name="word_chinese">中文</string>
+    <string name="word_example">例句</string>
+    <string name="word_phonetic">音标</string>
+    
+    <string name="btn_know">认识</string>
+    <string name="btn_unknown">不认识</string>
+    <string name="btn_show_translation">显示中文</string>
+    <string name="btn_next">下一个</string>
+    <string name="btn_remembered">记住了</string>
+    <string name="btn_forgot">忘记了</string>
+    <string name="btn_hide">隐藏</string>
+    <string name="btn_unhide">取消隐藏</string>
+    
+    <string name="hint_no_words">没有单词可学习</string>
+    <string name="hint_no_review">没有需要复习的单词</string>
+    <string name="hint_no_hidden">没有隐藏的单词</string>
+    
+    <string name="status_known">认识</string>
+    <string name="status_unknown">不认识</string>
+    <string name="status_reviewing">复习中</string>
+    <string name="status_hidden">已隐藏</string>
+    
+    <string name="stats_known">认识: %d</string>
+    <string name="stats_unknown">不认识: %d</string>
+    <string name="stats_reviewing">复习中: %d</string>
+    <string name="stats_due_review">待复习: %d</string>
+    <string name="stats_hidden">隐藏: %d</string>
+    
+    <string name="review_stage">第%d次复习</string>
+    <string name="next_review">下次复习: %s</string>
+</resources>
