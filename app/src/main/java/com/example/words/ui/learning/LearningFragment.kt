@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import com.example.words.R
 import com.example.words.databinding.FragmentLearningBinding
 import com.example.words.viewmodel.WordViewModel
 import kotlinx.coroutines.launch
@@ -17,6 +18,11 @@ class LearningFragment : Fragment() {
     private var _binding: FragmentLearningBinding? = null
     private val binding get() = _binding!!
     private val viewModel: WordViewModel by viewModels()
+    
+    // 当前学习阶段：1=第一阶段（认识/不认识），2=第二阶段（下一个/记错了）
+    private var currentStage = 1
+    // 第一阶段的选择：true=认识，false=不认识
+    private var firstStageChoice: Boolean? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,16 +42,42 @@ class LearningFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.tvWord.setOnClickListener {
-            toggleTranslation()
-        }
-
+        // 第一阶段按钮
         binding.btnKnown.setOnClickListener {
-            markWordAsKnown()
+            firstStageChoice = true
+            enterSecondStage()
         }
 
         binding.btnUnknown.setOnClickListener {
-            markWordAsUnknown()
+            firstStageChoice = false
+            enterSecondStage()
+        }
+        
+        // 第二阶段按钮
+        binding.btnNext.setOnClickListener {
+            // 用户确认记忆正确
+            if (firstStageChoice == true) {
+                // 认识且记忆正确 -> 标记为认识
+                markWordAsKnown()
+            } else {
+                // 不认识但记忆正确 -> 标记为不认识
+                markWordAsUnknown()
+            }
+            resetToFirstStage()
+            loadNextWord()
+        }
+        
+        binding.btnWrong.setOnClickListener {
+            // 用户记忆错误
+            if (firstStageChoice == true) {
+                // 认识但记忆错误 -> 实际是不认识
+                markWordAsUnknown()
+            } else {
+                // 不认识且记忆错误 -> 实际是认识
+                markWordAsKnown()
+            }
+            resetToFirstStage()
+            loadNextWord()
         }
     }
 
@@ -53,20 +85,44 @@ class LearningFragment : Fragment() {
         viewModel.currentWord.observe(viewLifecycleOwner) { word ->
             word?.let {
                 binding.tvWord.text = it.english
-                binding.tvTranslation.text = "点击显示中文翻译"
-                binding.tvTranslation.visibility = View.VISIBLE
+                // 每次新单词都重置到第一阶段
+                resetToFirstStage()
             }
         }
     }
 
-    private fun toggleTranslation() {
+    private fun enterSecondStage() {
+        currentStage = 2
+        
+        // 显示中文翻译
         viewModel.currentWord.value?.let { word ->
-            if (binding.tvTranslation.text == "点击显示中文翻译") {
-                binding.tvTranslation.text = word.chinese
-            } else {
-                binding.tvTranslation.text = "点击显示中文翻译"
-            }
+            binding.tvTranslation.text = word.chinese
+            binding.tvTranslation.setTextColor(resources.getColor(android.R.color.black, null))
         }
+        
+        // 切换按钮组
+        binding.firstStageBtnGroup.visibility = View.GONE
+        binding.secondStageBtnGroup.visibility = View.VISIBLE
+        
+        // 更新提示
+        val choiceText = if (firstStageChoice == true) getString(R.string.btn_know) else getString(R.string.btn_unknown)
+        binding.tvProgress.text = getString(R.string.hint_second_stage, choiceText)
+    }
+    
+    private fun resetToFirstStage() {
+        currentStage = 1
+        firstStageChoice = null
+        
+        // 重置翻译显示
+        binding.tvTranslation.text = getString(R.string.hint_click_to_show_translation)
+        binding.tvTranslation.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+        
+        // 切换按钮组
+        binding.firstStageBtnGroup.visibility = View.VISIBLE
+        binding.secondStageBtnGroup.visibility = View.GONE
+        
+        // 重置提示
+        updateProgress()
     }
 
     private fun markWordAsKnown() {
@@ -88,8 +144,14 @@ class LearningFragment : Fragment() {
     }
 
     private fun updateProgress() {
-        // 暂时不显示进度，可以后续从数据库获取
-        binding.tvProgress.text = "学习模式"
+        // 显示当前学习状态
+        when (currentStage) {
+            1 -> binding.tvProgress.text = getString(R.string.hint_first_stage)
+            2 -> {
+                val choiceText = if (firstStageChoice == true) getString(R.string.btn_know) else getString(R.string.btn_unknown)
+                binding.tvProgress.text = getString(R.string.hint_second_stage, choiceText)
+            }
+        }
         binding.progressBar.progress = 0
     }
 

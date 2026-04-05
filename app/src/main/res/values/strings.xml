@@ -14,6 +14,7 @@
     <string name="btn_unknown">不认识</string>
     <string name="btn_show_translation">显示中文</string>
     <string name="btn_next">下一个</string>
+    <string name="btn_wrong">记错了</string>
     <string name="btn_remembered">记住了</string>
     <string name="btn_forgot">忘记了</string>
     <string name="btn_hide">隐藏</string>
@@ -22,6 +23,10 @@
     <string name="hint_no_words">没有单词可学习</string>
     <string name="hint_no_review">没有需要复习的单词</string>
     <string name="hint_no_hidden">没有隐藏的单词</string>
+    
+    <string name="hint_click_to_show_translation">点击显示中文翻译</string>
+    <string name="hint_first_stage">看到单词后，选择\"认识\"或\"不认识\"</string>
+    <string name="hint_second_stage">您选择了\"%s\"，请确认记忆是否正确</string>
     
     <string name="status_known">认识</string>
     <string name="status_unknown">不认识</string>
