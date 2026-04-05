@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">secondapp</string>
+    <string name="app_name">红米语音助手</string>
+    <string name="start_recording">开始录音</string>
+    <string name="stop_recording">停止录音</string>
+    <string name="speech_prompt">请说话...</string>
+    <string name="ready_status">就绪</string>
+    <string name="listening_status">正在聆听...</string>
+    <string name="no_speech_recognition">设备不支持语音识别</string>
+    <string name="permission_required">需要录音权限</string>
 </resources>
