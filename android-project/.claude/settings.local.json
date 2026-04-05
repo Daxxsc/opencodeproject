@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew :app:build --dry-run)",
+      "Bash(./gradlew :app:build --stacktrace)",
+      "Bash(./gradlew.bat assembleDebug)"
+    ]
+  }
+}
