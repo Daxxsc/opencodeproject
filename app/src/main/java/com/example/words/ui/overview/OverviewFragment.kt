@@ -7,20 +7,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.words.R
 import com.example.words.databinding.FragmentOverviewBinding
 import com.example.words.viewmodel.WordViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 
 class OverviewFragment : Fragment() {
 
     private var _binding: FragmentOverviewBinding? = null
     private val binding get() = _binding!!
     private val viewModel: WordViewModel by viewModels()
-    private lateinit var wordAdapter: WordAdapter
+    private lateinit var wordAdapter: GroupedWordAdapter
     private var showHiddenOnly = false
 
     override fun onCreateView(
@@ -34,27 +33,24 @@ class OverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        
         setupRecyclerView()
         setupMenu()
+    }
+    
+    override fun onStart() {
+        super.onStart()
         observeViewModel()
-        loadWords()
     }
 
     private fun setupRecyclerView() {
-        wordAdapter = WordAdapter { word ->
+        wordAdapter = GroupedWordAdapter { word ->
             showWordDetails(word)
         }
-
+        
         binding.rvWords.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = wordAdapter
-            addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    LinearLayoutManager.VERTICAL
-                )
-            )
         }
     }
 
@@ -64,7 +60,7 @@ class OverviewFragment : Fragment() {
                 val filteredWords = if (showHiddenOnly) {
                     words.filter { word -> word.getIsHidden() }
                 } else {
-                    words.filter { word -> !word.getIsHidden() }
+                    words
                 }
                 wordAdapter.updateWords(filteredWords)
                 updateStats(words)
@@ -101,8 +97,10 @@ class OverviewFragment : Fragment() {
         return when (item.itemId) {
             R.id.menu_toggle_hidden -> {
                 showHiddenOnly = !showHiddenOnly
-                item.title = if (showHiddenOnly) "显示全部" else "仅显示隐藏"
-                loadWords()
+                item.title = if (showHiddenOnly) "仅显示隐藏" else "显示全部"
+                // 重置展开状态，然后重新观察数据
+                wordAdapter.resetExpandedStates()
+                observeViewModel()
                 true
             }
             else -> super.onOptionsItemSelected(item)

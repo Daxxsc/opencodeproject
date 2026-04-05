@@ -15,7 +15,8 @@ import java.util.concurrent.Executors;
 
 public class DatabaseInitializer {
     private static final String TAG = "DatabaseInitializer";
-    private static final String WORDS_CSV_FILE = "kaoyan_words_100.csv";
+    private static final String DEFAULT_WORDS_CSV_FILE = "kaoyan_words_100.csv";
+    private static final String CUSTOM_WORDS_CSV_FILE = "my_words.csv"; // 您的自定义单词书
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     
     public static void initializeDatabase(@NonNull Context context) {
@@ -30,24 +31,41 @@ public class DatabaseInitializer {
                 return;
             }
             
-            // 从CSV文件导入单词
-            List<Word> words = loadWordsFromCSV(context);
-            if (words != null && !words.isEmpty()) {
+            List<Word> allWords = new ArrayList<>();
+            
+            // 首先尝试加载自定义单词书
+            List<Word> customWords = loadWordsFromCSV(context, CUSTOM_WORDS_CSV_FILE);
+            if (customWords != null && !customWords.isEmpty()) {
+                allWords.addAll(customWords);
+                Log.i(TAG, "Loaded " + customWords.size() + " words from custom CSV: " + CUSTOM_WORDS_CSV_FILE);
+            } else {
+                // 如果自定义文件不存在，加载默认单词书
+                Log.i(TAG, "Custom CSV file not found, loading default words");
+                List<Word> defaultWords = loadWordsFromCSV(context, DEFAULT_WORDS_CSV_FILE);
+                if (defaultWords != null && !defaultWords.isEmpty()) {
+                    allWords.addAll(defaultWords);
+                    Log.i(TAG, "Loaded " + defaultWords.size() + " words from default CSV: " + DEFAULT_WORDS_CSV_FILE);
+                }
+            }
+            
+            if (!allWords.isEmpty()) {
                 try {
-                    wordDao.insertAll(words.toArray(new Word[0]));
-                    Log.i(TAG, "Successfully imported " + words.size() + " words from CSV");
+                    wordDao.insertAll(allWords.toArray(new Word[0]));
+                    Log.i(TAG, "Successfully imported " + allWords.size() + " words total");
                 } catch (Exception e) {
                     Log.e(TAG, "Error inserting words into database", e);
                 }
+            } else {
+                Log.w(TAG, "No words loaded from any CSV file");
             }
         });
     }
     
-    private static List<Word> loadWordsFromCSV(@NonNull Context context) {
+    private static List<Word> loadWordsFromCSV(@NonNull Context context, String csvFileName) {
         List<Word> words = new ArrayList<>();
         AssetManager assetManager = context.getAssets();
         
-        try (InputStream inputStream = assetManager.open(WORDS_CSV_FILE);
+        try (InputStream inputStream = assetManager.open(csvFileName);
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             
             String line;
@@ -65,12 +83,8 @@ public class DatabaseInitializer {
                 if (parts.length >= 2) {
                     String english = parts[0].trim();
                     String chinese = parts[1].trim();
-                    String phonetic = parts.length > 2 ? parts[2].trim() : "";
-                    String example = parts.length > 3 ? parts[3].trim() : "";
                     
                     Word word = new Word(english, chinese);
-                    word.phonetic = phonetic;
-                    word.example = example;
                     word.status = "UNKNOWN"; // 初始状态为未知
                     word.reviewStage = 0;
                     word.nextReviewDate = null;
@@ -81,12 +95,14 @@ public class DatabaseInitializer {
                 }
             }
             
-            Log.i(TAG, "Loaded " + words.size() + " words from CSV file");
+            Log.i(TAG, "Loaded " + words.size() + " words from CSV file: " + csvFileName);
             
         } catch (IOException e) {
-            Log.e(TAG, "Error reading CSV file: " + WORDS_CSV_FILE, e);
+            Log.e(TAG, "Error reading CSV file: " + csvFileName, e);
+            return null; // 文件不存在时返回null
         } catch (Exception e) {
-            Log.e(TAG, "Error parsing CSV file", e);
+            Log.e(TAG, "Error parsing CSV file: " + csvFileName, e);
+            return null;
         }
         
         return words;

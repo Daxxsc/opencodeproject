@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_toggle_hidden"
-        android:title="仅显示隐藏"
+        android:title="显示全部"
         android:icon="@android:drawable/ic_menu_view"
         android:showAsAction="ifRoom" />
 </menu>
