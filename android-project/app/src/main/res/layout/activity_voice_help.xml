@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#FFFFFF">
+
+    <!-- 标题 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="语音识别设置帮助"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FF5722"
+        android:layout_marginBottom="24dp" />
+
+    <!-- 帮助文本 -->
+    <TextView
+        android:id="@+id/helpText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="#333333"
+        android:lineSpacingExtra="8dp"
+        android:padding="16dp"
+        android:background="#F9F9F9"
+        android:layout_marginBottom="24dp" />
+
+    <!-- 按钮容器 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/installButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="安装语音应用"
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#4CAF50" />
+
+        <Button
+            android:id="@+id/retryButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="重试"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#2196F3" />
+
+    </LinearLayout>
+
+    <!-- 红米专属提示 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="红米 K60 专属提示：\n• 唤醒小爱同学：长按电源键 0.5 秒\n• 或说「小爱同学」\n• 在设置中开启「语音唤醒」"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:background="#FFF3E0"
+        android:padding="12dp"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
